@@ -1,0 +1,15 @@
+--- Errors ---
+
+java.io.IOException: Failed to download remote update
+
+If you are connected to the same network, connected your phone on ur laptop with usb tethering on and this error still persist, its usually Microslop's fault (Fuck u windows security)
+To fix it:
+1. Go to Windows Security
+2. Go to Firewall & Nework Protection (For reference, open README_Assets/Firewall&NetworkProtection folder)
+3. Go to Advanced Settings
+4. Go to Inbound Rules
+5. Press New Rule...
+6. Select Port
+7. Select TCP and Specific local ports, insert your Expo Go's port
+8. Press Next till you reach the Name
+9. For convenience's sake, name it ExpoGo
