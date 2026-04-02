@@ -1,49 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Image, Button} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useVideoPlayer, VideoView } from 'expo-video';
-import { useEventListener } from 'expo';
+import animation from '../assets/Codes/animations.js';
+import animStyle from '../assets/Codes/animationStyle.js'
 
 const TitleScreen = () => {
-    const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
+ 
     const navigation = useNavigation();
-    const idleGIFFaust = require('../assets/ArdorBlossomFaust/Idle.gif');
-    const skill1Faust = require('../assets/ArdorBlossomFaust/Skill1.mp4')
-    const skill2Faust = require('../assets/ArdorBlossomFaust/Skill2.mp4')
-    const skill3Faust = require('../assets/ArdorBlossomFaust/Skill3.mp4')
+
 
     const [playerIsIdle, setPlayerStatus] = useState(true);
     const [currentAnimation, setCurrentAnimation] = useState(null);
     const [currentStyle, setCurrentStyle] = useState(null);
+
+    const animations = new animation();
+
+    function delay(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
 
     const player = useVideoPlayer(currentAnimation, player => {
         player.loop=false;
         player.replay();
       });
 
-    const skill = (player, animation, delayTime, styleVersion) => {
+    const skill = async (player, animationIndex, delayTime, style, pauseTime) => {
         setPlayerStatus(!playerIsIdle);
-        setCurrentAnimation(animation);
-        setCurrentStyle(styleVersion);
+        setCurrentAnimation(animations.getAnim(animationIndex));
+        setCurrentStyle(style);
         player.replay();
-        delay(delayTime).then(() => {
-            setPlayerStatus(true);
-        });
+        await delay(delayTime)
+        setPlayerStatus(true);
     };
 
-    
-    const attack = () => {
-
-        return (
-            <VideoView
-                style={currentStyle}
-                player={player}
-                nativeControls={false}
-                resizeMode="contain"
-            />
-        )
-    }
     return (
         <View style={styles.container}>
             <View style={styles.titleContainer}>
@@ -52,23 +42,39 @@ const TitleScreen = () => {
                     <Text style={styles.backButtonText}>Back</Text>
                 </TouchableOpacity>
             </View>
-      
-            {playerIsIdle ? (
-                <Image source={idleGIFFaust} style={styles.playerCharacter} />
-            ) : (
-                attack()
-            )}
+
+            <View style={styles.playerContainer}>
+                {playerIsIdle ? (
+                    <Image source={animations.getAnim(0)} style={animStyle.idle} />
+                ) : (
+                    <VideoView
+                        style={currentStyle}
+                        player={player}
+                        nativeControls={false}
+                        resizeMode="contain"
+                    />
+                )}
+                <Text style={styles.hp}>Player HP: 100</Text>  
+            </View>
+            
             
             <View style={styles.skillContainer}>
-                <Text>Player HP: 100</Text>
-                <TouchableOpacity style={styles.skill1Button} onPress={() => skill(player, skill1Faust, 1200, styles.skill1)}>
+                                                     
+                                                                         
+                <TouchableOpacity style={styles.skill1Button} onPress={() => skill(player, 1, 1500, animStyle.skill1, 1000)}>
                     <Text style={styles.backButtonText}>Skill 1</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.skill2Button} onPress={() => skill(player, skill2Faust, 3000, styles.skill2)}>
+                <TouchableOpacity style={styles.skill1_2Button} onPress={() => skill(player, 1, 2100, animStyle.skill1, 1)}>
+                    <Text style={styles.backButtonText}>Skill 1.2</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.skill2Button} onPress={() => skill(player, 2, 1400, animStyle.skill2, 1)}>
                     <Text style={styles.backButtonText}>Skill 2</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.skill3Button} onPress={() => skill(player, skill3Faust, 4000, styles.skill3)}>
+                <TouchableOpacity style={styles.skill3Button} onPress={() => skill(player, 3, 1400, animStyle.skill3, 1)}>
                     <Text style={styles.backButtonText}>Skill 3</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.skill3_2Button} onPress={() => skill(player, 3, 2700, animStyle.skill3, 1)}>
+                    <Text style={styles.backButtonText}>Skill 3.2</Text>
                 </TouchableOpacity>
             </View>
         
@@ -79,7 +85,7 @@ const TitleScreen = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: '#b3b3b3',
         alignItems: 'center',
         justifyContent: 'center',
     },
@@ -114,6 +120,14 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
     },
+    playerContainer: {
+        position: 'absolute',
+        left: 10,
+        bottom: 10,
+    },
+    hp: {
+        position: 'absolute',
+    },
     skillContainer: {
         position: 'absolute',
         bottom: 0,
@@ -123,30 +137,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#f0f0f0',
         padding: 20,
     },
-    playerCharacter: {
-        position: 'absolute',
-        width: '60',
-        resizeMode: 'contain',
-        left: 140,
-    },
-    skill1: {
-        resizeMode: 'contain',
-        width: 120,
-        height: 150,
-        left: 120,
-    },
-    skill2: {
-        resizeMode: 'contain',
-        width: 350,
-        height: 350,
-        left: 120,
-    },
-    skill3: {
-        resizeMode: 'contain',
-        width: 500,
-        height: 550,
-        left: 100,
-    },
     skill1Button: {
         backgroundColor: '#0866FF',
         alignItems: 'center',
@@ -155,6 +145,15 @@ const styles = StyleSheet.create({
         width: 80,
         left: 200,
         top: 20,
+    },
+    skill1_2Button: {
+        backgroundColor: '#0866FF',
+        alignItems: 'center',
+        position: 'absolute',
+        borderRadius: 8,
+        width: 80,
+        left: 200,
+        top: 50,
     },
     skill2Button: {
         backgroundColor: '#0866FF',
@@ -173,6 +172,15 @@ const styles = StyleSheet.create({
         width: 80,
         left: 460,
         top: 20,
+    },  
+    skill3_2Button: {
+        backgroundColor: '#0866FF',
+        alignItems: 'center',
+        position: 'absolute',
+        borderRadius: 8,
+        width: 80,
+        left: 460,
+        top: 50,
     },  
     
     
