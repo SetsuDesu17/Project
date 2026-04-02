@@ -21,3 +21,6 @@ npm install @react-navigation/native-stack
 
 Video Player
 npx expo install expo-video
+
+Prompt
+npm install prompt-sync
