@@ -1,5 +1,13 @@
 Project in ITTEC - 06
 
+--- TO DO LIST ---
+Finish back-end -- HERE
+Refactor back end and add database
+Finish front-end and integrate back-end
+Additional Features
+Debugging
+Balancing of gameplay
+
 --- NOTE ---
 
 Make sure to set your expo version to 55.0.5
