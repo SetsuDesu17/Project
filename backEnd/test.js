@@ -1,9 +1,9 @@
-import BattleScreen from './battleScreen.js';
+import battleScreen from './battleScreen.js';
 
 
 const testBattleScreen = () => {
     console.log('initializing');
-    BattleScreen.turnStart();
+    battleScreen.battleStart();
 }
 
 testBattleScreen();
