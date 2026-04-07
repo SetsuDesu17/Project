@@ -1,11 +1,12 @@
 
 
 export default class entity {
-    constructor(id, type, name, level,  hp, atk, def, spd, status){
+    constructor(id, type, name, level, exp, hp, atk, def, spd, status){
         this.id = id;
         this.type = type;
         this.name = name;
         this.level = level;
+        this.exp = exp;
         this.hp = hp;
         this.atk = atk;
         this.def = def; 
@@ -23,6 +24,7 @@ export default class entity {
         const enemyNames = ["Goblin", "Orc", "Troll", "Skeleton", "Bandit"];
         const randomName = enemyNames[Math.floor(Math.random() * enemyNames.length)];
         const randomLevel = Math.max(1, player.level + Math.floor(Math.random() * 3));
+        const exp = 0;
         const baseHP = 50*randomLevel;
         const baseATK = 5*randomLevel;
         const baseDEF = 5*randomLevel;
@@ -30,7 +32,7 @@ export default class entity {
         const randomATK = Math.floor(baseATK + Math.random() * 5);
         const randomDEF = Math.floor(baseDEF + Math.random() * 5);
         const randomSPD = 15;
-        return new entity(id, "Enemy", randomName, randomLevel, randomHP, randomATK, randomDEF, randomSPD, null);
+        return new entity(id, "Enemy", randomName, randomLevel, exp, randomHP, randomATK, randomDEF, randomSPD, null);
     }
 
 }
