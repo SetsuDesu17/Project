@@ -1,5 +1,8 @@
 Project in ITTEC - 06
 
+-- HEADS UP! --
+/Project/backEnd/models/skillsModel.js -- UNFINISHED
+
 --- TO DO LIST ---
 Finish back-end -- HERE
 Refactor back end and add database
