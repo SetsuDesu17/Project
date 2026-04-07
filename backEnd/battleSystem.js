@@ -46,9 +46,10 @@ const battleSystem = {
         }
     },
 
-    planningPhase: (player, enemy, stringArray, intArray) => { // Returns [ player, enemy, stringArray, intArray, playerPlan, enemyPlan ]
+    planningPhase: (player, enemy, stringArray, intArray, playerSkillsArray) => { // Returns [ player, enemy, stringArray, intArray, playerSkillsArray, playerPlan, enemyPlan ]
         let playerPlan;
         let enemyPlan;
+        playerTurn(player, enemy, stringArray, intArray, playerSkillsArray);
         return [player, enemy, stringArray, intArray, playerPlan, enemyPlan]; 
     },
 
@@ -71,18 +72,15 @@ const battleSystem = {
         return [player, enemy, stringArray, intArray];
     },
 
-    playerTurn: (player, enemy, stringArray, intArray) => {
-        const playerSkills = [
-            skills.strConcat(player, enemy, stringArray, intArray), 
-            skills.strLength(player, enemy, stringArray, intArray), 
-            skills.intToStr(player, enemy, stringArray, intArray), 
-            skills.add(player, enemy, stringArray, intArray), 
-            skills.multiply(player, enemy, stringArray, intArray), 
-            skills.intDmg(player, enemy, stringArray, intArray), 
-            skills.strDmg(player, enemy, stringArray, intArray)
+    playerTurn: (player, enemy, stringArray, intArray, playerSkillsArray) => {
+        const skillList = [
+            skills.randStr( player, enemy, stringArray, intArray ),
+            skills.randInt1To5( player, enemy, stringArray, intArray ),
+            skills.strConcat( player, enemy, stringArray, intArray ),
+            skills.strLength( player, enemy, stringArray, intArray )
         ];
-        const playerSkillNames = skills.skillNames;
-        const playerSkillDescriptions = skills.skillDescriptions;
+        const skillNames = skills.skillNames;
+        const skillDescriptions = skills.skillDescriptions;
 
 
     },

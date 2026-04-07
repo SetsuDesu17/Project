@@ -23,7 +23,7 @@ const battleScreen = {
 
             // Planning Phase, Player and Enemy choose their actions for the turn
             battleScreen.printPlayerSkills(playerSkillsArray);
-            [ player, enemy, stringArray, intArray, playerPlan, enemyPlan ] = battleSystem.planningPhase(player, enemy, stringArray, intArray);
+            [ player, enemy, stringArray, intArray, playerPlan, enemyPlan ] = battleSystem.planningPhase(player, enemy, stringArray, intArray, playerSkillsArray);
 
 
             // Battle Phase, Player and Enemy actions are executed based on turn order

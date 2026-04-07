@@ -24,3 +24,6 @@ npx expo install expo-video
 
 Prompt
 npm install prompt-sync
+
+ExpoSqlite
+npx expo install expo-sqlite
