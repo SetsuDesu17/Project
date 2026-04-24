@@ -1,7 +1,10 @@
 Project in ITTEC - 06
 
 -- HEADS UP! --
-/Project/backEnd/models/skillsModel.js -- UNFINISHED
+How to run backend:
+cd Project
+cd backEnd
+node testBattle.js
 
 --- TO DO LIST ---
 Finish back-end -- HERE
