@@ -4,113 +4,215 @@ const skills = {
     alphabetArray: ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"],
     vowelArray: ["a", "e", "i", "o", "u"],
 
-    skillNames: [
-        "randStr()",
-        "randInt1To5()", 
-        "strConcat( string, string )", 
-        "strLength( string )", 
-        "intToStr( int )", 
-        "add( int, int )", 
-        "multiply( int, int )", 
-        "intDmg( int )",
-        "forEachInt( int[] )",
-        "strDmg( string )", 
-        "strArrayDmg( string[] )",
-        "forEachVowel( string[] )"
-    ],
-
     skillDescriptions: [
-        "type: Generate - Generates a random single letter string and adds it to the string array.",
-        "type: Generate - Generates a random integer (1-5) and adds it to the int array.",
-        "type: Generate - Combines two strings into one.",
-        "type: Generate - Returns the length of a string and adds it to the int array.",
-        "type: Generate - Converts an integer to a string and adds it to the string array.",
-        "type: Generate - Adds two integers into one.",
-        "type: Generate - Multiplies two integers into one.",
-        "type: AttackInt - Deals damage based on an integer value + attack stat.",
-        "type: AttackInt - Deals damage for each int in the int array multiplied by (40% of player's attack stat). (Warning: Consumes all int values)",
-        "type: AttackStr - Deals true damage based on the length of a string * player's attack stat.",
-        "type: AttackStr - Deals 40% of the length of the string array x attack stat as true damage. (Does not consume the string array or its contents)",
-        "type: AttackStr - Deals 150% of player's attack stat per vowel count inside the string array as true damage."
+        "type: create - Generates a random single letter string and adds it to the string array.",
+        "type: create - Generates a random integer (1-5) and adds it to the int array.",
+        "type: create - Combines two strings into one.",
+        "type: create - Returns the length of a string and adds it to the int array.",
+        "type: create - Converts an integer to a string and adds it to the string array.",
+        "type: create - Adds two integers into one.",
+        "type: create - Multiplies two integers into one.",
+        "type: attack - Deals damage based on an integer value + attack stat.",
+        "type: attack - Deals damage for each int in the int array multiplied by (40% of player's attack stat). (Warning: Consumes all int values)",
+        "type: attack - Deals true damage based on the length of a string * player's attack stat.",
+        "type: attack - Deals 40% of the length of the string array x attack stat as true damage. (Does not consume the string array or its contents)",
     ],
 
-    // Skill Structure: [ skillID, skillType, skillOutputMessage, skillOutput ]
-    randStr: (player, enemy, stringArray, intArray) => {
-        const randomString = skills.alphabetArray[Math.floor(Math.random() * skills.alphabetArray.length-1)];
-        return [ 0, "Generate", `${player.name} used randStr! Generated a random string: ${randomString} and added it to the string array!`, randomString ];
-    },
-    randInt1To5: (player, enemy, stringArray, intArray) => {
-        const randomInt = Math.floor(Math.random() * 4) + 1;
-        return [ 1, "Generate", `${player.name} used randInt! Generated a random integer: ${randomInt} and added it to the int array!`, randomInt ];
-    },
-    strConcat: (player, enemy, stringArray, intArray) => {
-        if (stringArray.length > 2) {
-            return [ 2, "Generate", `${player.name} used strConcat! Combined ${stringArray[0]} and ${stringArray[1]} to create ${stringArray[0] + stringArray[1]}!`, stringArray[0] + stringArray[1] ];
+    // Skill Structure: [ skillID, skillOutput, newStringArray, newIntArray ]
+    randStr: (player, stringArray, intArray, checking) => {
+        if (checking == false){
+            const randomString = skills.alphabetArray[Math.floor(Math.random() * skills.alphabetArray.length)-1];
+            return [ 
+                0, 
+                stringArray.push(randomString), 
+                stringArray,
+                intArray
+            ];
+        } else {
+            return ["create"];
         }
     },
-    strLength: (player, enemy, stringArray, intArray) => {
-        if (stringArray.length > 0) {
-            return [ 3, "Generate", `${player.name} used strLength! Added the length of ${stringArray[0]} which is: ${stringArray[0].length} to Int Array!`, parseInt(stringArray[0].length) ];
+    randInt1To5: (player, stringArray, intArray, checking) => {
+        if (checking == false){
+            const randomInt = Math.floor(Math.random() * 4) + 1;
+            return [ 
+                1, 
+                intArray.push(randomInt),
+                stringArray,
+                intArray
+            ];
+        } else {
+            return ["create"];
         }
     },
-    intToStr: (player, enemy, stringArray, intArray) => {
-        if (intArray.length > 0) {
-            return [ 4, "Generate", `${player.name} used intToStr! Converted "${intArray[0]}" to a string and added it to String Array!`, intArray[0].toString() ];
-        }
-    },
-    add: (player, enemy, stringArray, intArray) => {
-        if (intArray.length > 1) {
-            return [ 5, "Generate", `${player.name} used add! Combined ${intArray[0]} and ${intArray[1]} to create ${parseInt(intArray[0]) + parseInt(intArray[1])}!`, parseInt(intArray[0]) + parseInt(intArray[1]) ];
-        }
-    },
-
-    multiply: (player, enemy, stringArray, intArray) => {
-        if (intArray.length > 1) {
-            return [ 6, "Generate", `${player.name} used multiply! Multiplied ${intArray[0]} and ${intArray[1]} to create ${parseInt(intArray[0]) * parseInt(intArray[1])}!`, parseInt(intArray[0]) * parseInt(intArray[1]) ];
-        }
-    },
-
-    intDmg: (player, enemy, stringArray, intArray) => {
-        if (intArray.length > 0) {
-            return [ 7, "Attack", `${player.name} used intDmg! Dealt ${intArray[0]} damage to ${enemy.name}!`, parseInt(intArray[0]) + parseInt(player.atk) ];
-        }
-    },
-
-    forEachIntDmg: (player, enemy, stringArray, intArray) => {
-        if (intArray.length > 0) {
-            let totalDmg = 0;
-            for (let i = 0; i < intArray.length; i++) {
-                totalDmg += (parseInt(intArray[i])*0.3) + parseInt(player.atk);
+    strConcat: (player, stringArray, intArray, checking) => {
+        if (stringArray.length > 1) {
+            if (checking == false){
+                let stringOne = stringArray.shift();
+                let stringTwo = stringArray.shift();
+                return [
+                    2, 
+                    stringArray.push(stringOne + stringTwo),
+                    stringArray,
+                    intArray
+                ];
+            } else {
+                return ["create"];
             }
-            return [ 8, "Attack", `${player.name} used forEachInt! Dealt ${totalDmg} true damage to ${enemy.name}!`, totalDmg ];
+        } else {
+            return ["error"];
+        }
+    },
+    strLength: (player, stringArray, intArray, checking) => {
+        if (stringArray.length > 0) {
+            if (checking == false){
+                return [ 
+                    3, 
+                    intArray.push(parseInt(stringArray[0].length)),
+                    stringArray,
+                    intArray
+                ];
+            } else {
+                return ["create"];
+            }
+        } else {
+            return ["error"];
+        }
+    },
+    intToStr: (player, stringArray, intArray, checking) => {
+        if (intArray.length > 0) {
+            if (checking == false){
+                let convertedInt = intArray.shift();
+                return [ 
+                    4, 
+                    stringArray.push(convertedInt.toString()),
+                    stringArray,
+                    intArray
+                ];
+            } else {
+                return ["create"];
+            }
+        } else {
+            return ["error"];
+        }
+    },
+    add: (player, stringArray, intArray, checking) => {
+        if (intArray.length > 1) {
+            if (checking == false){
+                let intOne = intArray.shift();
+                let intTwo = intArray.shift();
+                return [ 
+                    5, 
+                    intArray.push(parseInt(intOne) + parseInt(intTwo)),
+                    stringArray,
+                    intArray
+                ];
+            } else {
+                return ["create"];
+            }
+
+        } else {
+            return ["error"];
         }
     },
 
+    multiply: (player, stringArray, intArray, checking) => {
+        if (intArray.length > 1) {
+            if (checking == false){
+                let intOne = intArray.shift();
+                let intTwo = intArray.shift();
+                return [ 
+                    6, 
+                    intArray.push(parseInt(intOne) * parseInt(intTwo)),
+                    stringArray,
+                    intArray
+                ];
+            } else {
+                return ["create"];
+            }
 
-    strDmg: (player, enemy, stringArray, intArray) => {
-        if (stringArray.length > 0) {
-            return [ 9, "Attack", `${player.name} used strDmg! Dealt ${parseInt(stringArray[0].length)*parseInt(player.atk)} true damage to ${enemy.name}!`, parseInt(stringArray[0].length)*parseInt(player.atk) ];
+        } else {
+            return ["error"];
         }
     },
 
-    strArrayDmg: (player, enemy, stringArray, intArray) => {
-        if (stringArray.length > 0) {
-            return [ 10, "Attack", `${player.name} used strArrayDmg! Dealt ${0.4 * (parseInt(stringArray.length)*parseInt(player.atk))} true damage to ${enemy.name}!`, 0.4 * (parseInt(stringArray.length)*parseInt(player.atk)) ];
+    intDmg: (player, stringArray, intArray, checking) => {
+        if (intArray.length > 0) {
+            if (checking == false){
+                let intOne = intArray.shift();
+                return [ 
+                    7, 
+                    parseInt(intOne) + parseInt(player.atk), 
+                    stringArray,
+                    intArray
+                ];
+            } else {
+                return ["attack"];
+            }
+
+        } else {
+            return ["error"];
         }
     },
 
-    forEachVowelDmg: (player, enemy, stringArray, intArray) => {
-        if (stringArray.length > 0) {
-            let totalDmg = 0;
-            for (let i = 0; i < stringArray.length; i++) {
-                if (skills.vowelArray.includes(stringArray[i].toLowerCase())) {
-                    totalDmg += 1.5 * player.atk;
+    forEachIntDmg: (player, stringArray, intArray, checking) => {
+        if (intArray.length > 0) {
+            if (checking == false){
+                let totalDmg = 0;
+                while (intArray.length > 0){ 
+                    totalDmg += (parseInt(intArray.shift())*0.5) + parseInt(player.atk*0.5);
                 }
+                return [ 
+
+                    8, 
+                    totalDmg,
+                    stringArray,
+                    intArray
+                    
+                ];
+            } else {
+                return ["attack"];
             }
-            return [ 11, "Attack", `${player.name} used forEachVowel! Dealt ${totalDmg} true damage to ${enemy.name}!`, totalDmg ];
+        } else {
+            return ["error"];
         }
-        
     },
+
+
+    strDmg: ( player, stringArray, intArray, checking ) => {
+        if (stringArray.length > 0) {
+            if (checking == false){
+                return [ 
+                    9, 
+                    parseInt(stringArray.shift().length)*parseInt(player.atk),
+                    stringArray,
+                    intArray
+                ];
+            } else {
+                return ["attack"];
+            }
+        } else {
+            return ["error"];
+        }
+    },
+
+    strArrayDmg: (player, stringArray, intArray, checking) => {
+        if (stringArray.length > 0) {
+            if (checking == false){
+                return [ 
+                    10, 
+                    0.4 * (parseInt(stringArray.length)*parseInt(player.atk)),
+                    stringArray,
+                    intArray
+                ];
+            } else {
+                return ["attack"];
+            }
+        } else {
+            return ["error"];
+        }
+    },
+
 }
 
 export default skills;

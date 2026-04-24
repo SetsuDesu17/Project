@@ -1,7 +1,8 @@
 
 
 export default class entity {
-    constructor(id, type, name, level, exp, hp, atk, def, spd, status){
+    //         int, str, str,   int,  int, int, int, int, int, array,  array
+    constructor(id, type, name, level, exp, hp, atk, def, spd, status, skillLevels){
         this.id = id;
         this.type = type;
         this.name = name;
@@ -13,15 +14,12 @@ export default class entity {
         this.spd = spd;
         this.status = status;
         this.state = "idle";
+        this.skillLevels = skillLevels;
     }
-    getName(){
-        return this.name;
-    }
-    getHP(){
-        return this.hp
-    }
-    generateRandomEnemy(player, id){
+
+    generateRandomEnemy(id, player){
         const enemyNames = ["Goblin", "Orc", "Troll", "Skeleton", "Bandit"];
+        const entityType = 'enemy';
         const randomName = enemyNames[Math.floor(Math.random() * enemyNames.length)];
         const randomLevel = Math.max(1, player.level + Math.floor(Math.random() * 3));
         const exp = 0;
@@ -29,10 +27,11 @@ export default class entity {
         const baseATK = 5*randomLevel;
         const baseDEF = 5*randomLevel;
         const randomHP = Math.floor(baseHP + ((Math.random() * 10) * 5));
-        const randomATK = Math.floor(baseATK + Math.random() * 5);
+        const randomATK = Math.floor(baseATK + Math.random() * 15)+1;
         const randomDEF = Math.floor(baseDEF + Math.random() * 5);
         const randomSPD = 15;
-        return new entity(id, "Enemy", randomName, randomLevel, exp, randomHP, randomATK, randomDEF, randomSPD, null);
+        let status = [];
+        return new entity(id, entityType, randomName, randomLevel, exp, randomHP, randomATK, randomDEF, randomSPD, status);
     }
 
 }
